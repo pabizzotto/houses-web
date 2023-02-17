@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { useCookies } from "vue3-cookies";
+import axios from "axios";
 
 const routes = [
   {
@@ -51,25 +52,16 @@ router.beforeEach(async (to, _from, next) => {
 
 async function verifyToken(token: string): Promise<boolean> {
   try {
-    const headers = new Headers();
-    headers.append("Content-Type", "application/json");
-
-    const body = JSON.stringify({
+    const body = {
       token,
-    });
-
-    const options = {
-      method: "POST",
-      headers,
-      body,
     };
 
-    const response = await fetch(
+    const response = await axios.post(
       "http://localhost:8000/api/auth/jwt/verify/",
-      options
+      body
     );
 
-    return response.ok;
+    return response.status === 200;
   } catch (error) {
     console.error(error);
     return false;

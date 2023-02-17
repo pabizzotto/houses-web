@@ -57,6 +57,12 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useCookies } from "vue3-cookies";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/vue/24/solid";
+import axios from 'axios';
+
+interface AccessTokenResponseModel {
+  access: string;
+  refresh: string;
+}
 
 const router = useRouter();
 const { cookies } = useCookies();
@@ -71,24 +77,16 @@ function toggleShowPassword() {
 
 async function submit() {
   try {
-    const body = JSON.stringify({
-      email,
-      password,
-    });
+    const body = {
+      email: email.value,
+      password: password.value,
+    }
 
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body,
-    };
-
-    const response = await fetch(
+    const response = await axios.post<AccessTokenResponseModel>(
       "http://localhost:8000/api/auth/jwt/create/",
-      requestOptions
+      body
     );
-    const { access, refresh } = await response.json();
+    const { access, refresh } = response.data;
 
     cookies.set("access-token", access);
     cookies.set("refresh-token", refresh);
