@@ -17,6 +17,13 @@ const routes = [
       requiresAuth: true,
     },
   },
+  {
+    path: "/signup",
+    component: () => import("../views/SignupPage.vue"),
+    meta: {
+      disabledIfLoggedIn: true,
+    },
+  }
 ];
 
 const router = createRouter({

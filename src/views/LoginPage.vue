@@ -1,7 +1,11 @@
 <template>
   <main class="flex justify-center items-center h-screen">
-    <form action="submit" class="flex flex-col gap-8">
-      <div class="flex flex-col">
+    <form
+      action="submit"
+      class="container flex flex-col mb-4"
+      style="width: 30%"
+    >
+      <div class="flex flex-col mb-4">
         <label
           for="email"
           class="block mb-2 text-sm font-medium text-slate-900 dark:text-white"
@@ -14,23 +18,28 @@
           type="email"
           name="Email"
           id="email"
+          placeholder="example@email.com"
           class="bg-gray-50 border border-gray-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         />
       </div>
 
-      <div class="flex flex-col relative">
-        <label
-          for="password"
-          class="block mb-2 text-sm font-medium text-slate-900 dark:text-white"
-        >
-          Password
-        </label>
+      <div class="flex flex-col relative mb-5">
+        <div class="flex justify-between">
+          <label
+            for="password"
+            class="block mb-2 text-sm font-medium text-slate-900 dark:text-white"
+          >
+            Password
+          </label>
+          <a class="text-xs no-underline"> Forgot password </a>
+        </div>
 
         <input
           v-model="password"
           :type="showPassword ? 'text' : 'password'"
           name="Password"
           id="password"
+          placeholder="Enter password"
           class="bg-gray-50 border border-gray-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         />
 
@@ -43,11 +52,16 @@
 
       <button
         type="button"
-        class="bg-slate-200 text-slate-900 rounded py-2"
+        class="bg-slate-200 text-slate-900 font-semibold rounded py-2 mb-4"
         @click="submit"
       >
         Sign in
       </button>
+
+      <p class="text-center">
+        Don't have an account?
+        <router-link to="/signup" class="font-bold"> Sign up now! </router-link>
+      </p>
     </form>
   </main>
 </template>
@@ -57,7 +71,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useCookies } from "vue3-cookies";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/vue/24/solid";
-import axios from 'axios';
+import axios from "axios";
 
 interface AccessTokenResponseModel {
   access: string;
@@ -80,7 +94,7 @@ async function submit() {
     const body = {
       email: email.value,
       password: password.value,
-    }
+    };
 
     const response = await axios.post<AccessTokenResponseModel>(
       "http://localhost:8000/api/auth/jwt/create/",
